@@ -1,0 +1,44 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: monitor-admin
+  profiles:
+    active: @profiles.active@
+
+--- # 监控中心服务端配置
+spring:
+  security:
+    user:
+      name: admin
+      password: ei31Kh
+  boot:
+    admin:
+      ui:
+        title: 服务监控中心
+        # 解决Spring Boot Admin使用HTTPS协议访问页面无法正常显示的问题
+        public-url: https://example.com/${spring.boot.admin.context-path}
+      context-path: /admin
+
+--- # Actuator 监控端点的配置项
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      external-file: ./logs/wx-monitor-admin.log
+
+--- # 监控配置
+spring.boot.admin.client:
+  # 增加客户端开关
+  enabled: true
+  # 设置 Spring Boot Admin Server 地址
+  url: http://localhost:8085/admin
+  instance:
+    service-host-type: IP
+  username: admin
+  password: ei31Kh

@@ -1,0 +1,13 @@
+package ${packageName}.mapper;
+
+import ${packageName}.domain.${ClassName};
+import ${packageName}.domain.vo.${ClassName}Vo;
+import vip.wexiang.common.core.mapper.BaseMapperPlus;
+
+/**
+ * ${functionName}Mapper接口
+ * Created by ${author}.
+ */
+public interface ${ClassName}Mapper extends BaseMapperPlus<${ClassName}Mapper, ${ClassName}, ${ClassName}Vo> {
+
+}
