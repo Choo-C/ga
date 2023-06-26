@@ -13,7 +13,7 @@
 	<@netCommon.commonHeader />
 	<!-- left -->
 	<@netCommon.commonLeft "jobgroup" />
-	
+
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
@@ -44,7 +44,7 @@
                     <button class="btn btn-block btn-success add" type="button">${I18n.jobinfo_field_add}</button>
                 </div>
             </div>
-			
+
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
@@ -158,7 +158,7 @@
             </div>
         </div>
     </div>
-	
+
 	<!-- footer -->
 	<@netCommon.commonFooter />
 </div>
@@ -170,3 +170,4 @@
 <script src="${request.contextPath}/static/js/jobgroup.index.1.js"></script>
 </body>
 </html>
+ExecutorBizClient

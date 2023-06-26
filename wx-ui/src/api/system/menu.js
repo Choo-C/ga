@@ -58,3 +58,11 @@ export function delMenu(menuId) {
     method: 'delete'
   })
 }
+export function lllll() {
+  console.error("xxxxxxxxxxxxxx")
+  alert("xxxxxxxxxxxxyyyyyy");
+
+
+
+  return null;
+}

@@ -18,13 +18,13 @@ xxl.job:
   access-token: xxl-job
   executor:
     # 执行器AppName：执行器心跳注册分组依据；为空则关闭自动注册
-    appname: xxl-job-executor
+    appname: MYxxl-job-executor123
     # 执行器端口号 执行器从9101开始往后写
     port: 9101
     # 执行器注册：默认IP:PORT
-    address:
+#    address: 127.0.0.1:9101
     # 执行器IP：默认自动获取IP
-    ip:
+    ip: 127.0.0.1
     # 执行器运行日志文件存储磁盘路径
     logpath: ./logs/xxl-job
     # 执行器日志文件保存天数：大于3生效
@@ -49,9 +49,9 @@ spring:
           driverClassName: com.mysql.cj.jdbc.Driver
           # jdbc 所有参数配置参考 https://lionli.blog.csdn.net/article/details/122018562
           # rewriteBatchedStatements=true 批处理优化 大幅提升批量插入更新删除性能(对数据库有性能损耗 使用批量操作应考虑性能问题)
-          url: jdbc:mysql://124.71.137.54:3306/government-affairs?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
+          url: jdbc:mysql://localhost:3306/Choo?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
           username: root
-          password: 541bcc82bbcf58f4
+          password: etoak
         # 从库数据源
 #        slave:
 #          lazy: true
@@ -102,13 +102,13 @@ spring:
 spring:
   redis:
     # 地址
-    host: 124.71.137.54
+    host: 127.0.0.1
     # 端口，默认为6379
-    port: 39222
+    port: 6379
     # 数据库索引
     database: 5
     # 密码(如没有密码请注释掉)
-    password: dYmJBQ
+#    password: dYmJBQ
     # 连接超时时间
     timeout: 10s
     # 是否开启ssl

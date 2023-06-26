@@ -1,13 +1,16 @@
 <template>
+
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+    <el-form v-bind:model="queryParams" ref="queryForm" size="small" v-bind:inline="true" v-show="showSearch">
       <el-form-item label="菜单名称" prop="menuName">
+        {{queryParams.menuName}}
         <el-input
           v-model="queryParams.menuName"
           placeholder="请输入菜单名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
+
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="菜单状态" clearable>
@@ -267,6 +270,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
+
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -275,7 +279,8 @@
 </template>
 
 <script>
-import { listMenu, getMenu, delMenu, addMenu, updateMenu } from "@/api/system/menu";
+import {listMenu, getMenu, delMenu, addMenu, updateMenu,lllll} from "@/api/system/menu";
+
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -327,6 +332,7 @@ export default {
     this.getList();
   },
   methods: {
+
     // 选择图标
     selected(name) {
       this.form.icon = name;
@@ -441,7 +447,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$modal.confirm('是否确认删除名称为"' + row.menuName + '"的数据项？').then(function() {
+      lllll();
+      this.$modal.confirm('123是否确认删除名称为123789"' + row.menuName + '"的数据项？').then(function() {
         return delMenu(row.menuId);
       }).then(() => {
         this.getList();

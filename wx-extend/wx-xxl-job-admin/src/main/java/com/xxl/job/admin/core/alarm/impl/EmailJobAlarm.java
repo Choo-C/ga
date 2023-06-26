@@ -52,13 +52,17 @@ public class EmailJobAlarm implements JobAlarm {
             XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(Integer.valueOf(info.getJobGroup()));
             String personal = I18nUtil.getString("admin_name_full");
             String title = I18nUtil.getString("jobconf_monitor");
-            String content = MessageFormat.format(loadEmailJobAlarmTemplate(),
+            String content = MessageFormat.format(
+                loadEmailJobAlarmTemplate(),
                 group != null ? group.getTitle() : "null",
                 info.getId(),
                 info.getJobDesc(),
                 alarmContent);
 
             Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+            logger.info("send go to email>>>>>>>>>>>>>>>>>>>>>>");
+            logger.info(title);
+            logger.info(content);
             for (String email : emailSet) {
 
                 // make mail

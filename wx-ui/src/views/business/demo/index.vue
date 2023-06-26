@@ -115,7 +115,7 @@
 </template>
 
 <script>
-  import {listDemo, getDemo, delDemo, addDemo, updateDemo} from "@/api/business/demo";
+import {listDemo, getDemo, delDemo, addDemo, updateDemo, qwe} from "@/api/business/demo";
 
   export default {
     name: "Demo",
@@ -167,6 +167,7 @@
       /** 查询演示列表 */
       getList() {
         this.loading = true;
+        qwe();
         listDemo(this.queryParams).then(response => {
           this.demoList = response.rows;
           this.total = response.total;
@@ -252,8 +253,9 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
+        qwe();
         const ids = row.id || this.ids;
-        this.$modal.confirm('是否确认删除演示编号为"' + ids + '"的数据项？').then(() => {
+        this.$modal.confirm('是否确认删除演示编号为123123"' + ids + '"的数据项？').then(() => {
           this.loading = true;
           return delDemo(ids);
         }).then(() => {

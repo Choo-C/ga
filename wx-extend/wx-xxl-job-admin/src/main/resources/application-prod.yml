@@ -14,9 +14,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/universal-system?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/Choo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: root
-    password: 7WUFiT
+    password: etoak
     hikari:
       auto-commit: true
       connection-test-query: SELECT 1
@@ -31,11 +31,11 @@ spring:
 --- # 邮件配置
 spring:
   mail:
-    from: xxx@qq.com
+    from: 710005130@qq.com
     host: smtp.qq.com
-    username: xxx@qq.com
-    password: xxx
-    port: 25
+    username: 710005130@qq.com
+    password: wvlgwplemprbbced
+    port: 465
     properties:
       mail:
         smtp:
@@ -45,3 +45,4 @@ spring:
           starttls:
             enable: true
             required: true
+

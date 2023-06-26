@@ -15,14 +15,14 @@
 	<@netCommon.commonHeader />
 	<!-- left -->
 	<@netCommon.commonLeft "joblog" />
-	
+
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>${I18n.joblog_name}</h1>
 		</section>
-		
+
 		<!-- Main content -->
 	    <section class="content">
 	    	<div class="row">
@@ -77,7 +77,7 @@
                     <button class="btn btn-block btn-default" id="clearLog">${I18n.joblog_clean}</button>
 	            </div>
           	</div>
-			
+
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box">
@@ -108,7 +108,7 @@
 			</div>
 	    </section>
 	</div>
-	
+
 	<!-- footer -->
 	<@netCommon.commonFooter />
 </div>

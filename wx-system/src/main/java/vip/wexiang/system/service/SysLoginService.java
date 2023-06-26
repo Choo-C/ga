@@ -83,6 +83,8 @@ public class SysLoginService {
             throw new UserException("user.password.not.match");
         }
         checkLogin(LoginType.PASSWORD, username, () -> !BCrypt.checkpw(password, user.getPassword()));
+        log.error(password);
+        log.error(user.toString());
         // 此处可根据登录用户的数据不同 自行创建 loginUser
         LoginUser loginUser = buildLoginUser(user);
         // 生成token
@@ -268,6 +270,7 @@ public class SysLoginService {
         loginUser.setRolePermission(permissionService.getRolePermission(user));
         loginUser.setDeptName(ObjectUtil.isNull(user.getDept()) ? "" : user.getDept().getDeptName());
         List<RoleDTO> roles = BeanUtil.copyToList(user.getRoles(), RoleDTO.class);
+        log.error(roles.toString());
         loginUser.setRoles(roles);
         return loginUser;
     }

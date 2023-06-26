@@ -1,6 +1,8 @@
 package vip.wexiang.oss.properties;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * OSS对象存储 配置属性
@@ -8,15 +10,17 @@ import lombok.Data;
  * @author Lion Li
  */
 @Data
+@Component
+@ConfigurationProperties(prefix = "oss")
 public class OssProperties {
 
     /**
-     * 访问站点
+     * 访问站点  url http://192.168.0.73:9000
      */
     private String endpoint;
 
     /**
-     * 自定义域名
+     * 自定义域名   http://127.0.0.1:9000
      */
     private String domain;
 

@@ -1,8 +1,10 @@
 package vip.wexiang.job.service;
 
+import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedInputStream;
@@ -12,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * XxlJob开发示例（Bean模式）
@@ -25,9 +28,26 @@ import java.util.Arrays;
  * @author xuxueli 2019-12-11 21:52:51
  */
 @Slf4j
-@Service
+//@Service
+@Component
 public class SampleService {
 
+    @XxlJob("demoJob")
+    public ReturnT demoJob(){
+        String param = XxlJobHelper.getJobParam();
+        System.out.println(param+">>>>>>>>>>>>>>>>>>>>>");
+        log.info("param:  {}", param);
+//        try {
+//            int result = 1 / 0; // 制造一个除以零的错误
+//        } catch (Exception e) {
+//            log.error("XXL-JOB demo job handler error", e);
+//
+//        }
+
+        System.out.println("demoJobdemoJobdemoJob"+new Date());
+        System.out.println("demoJobdemoJobdemoJob"+new Date());
+        return new ReturnT(200, "XXL-JOB, Hello World.");
+    }
     /**
      * 1、简单任务示例（Bean模式）
      */

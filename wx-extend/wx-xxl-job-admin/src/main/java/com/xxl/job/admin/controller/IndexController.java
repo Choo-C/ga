@@ -4,6 +4,7 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
+import groovy.util.logging.Slf4j;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
+
 public class IndexController {
 
     @Resource
@@ -55,6 +57,7 @@ public class IndexController {
     @RequestMapping("/toLogin")
     @PermissionLimit(limit = false)
     public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
+        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         if (loginService.ifLogin(request, response) != null) {
             modelAndView.setView(new RedirectView("/", true, false));
             return modelAndView;

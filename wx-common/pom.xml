@@ -14,6 +14,11 @@
     <description>
         common通用工具
     </description>
+    <properties>
+        <asdzxc>sadqwe</asdzxc>
+        <fdgdf>sadqwe</fdgdf>
+        <dfasdqwe>sadqwe</dfasdqwe>
+    </properties>
 
     <dependencies>
 

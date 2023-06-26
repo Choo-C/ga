@@ -32,7 +32,7 @@ public class I18nUtil {
             // build i18n prop
             String i18n = XxlJobAdminConfig.getAdminConfig().getI18n();
             String i18nFile = MessageFormat.format("i18n/message_{0}.properties", i18n);
-
+            logger.info(i18nFile);
             // load prop
             Resource resource = new ClassPathResource(i18nFile);
             EncodedResource encodedResource = new EncodedResource(resource, "UTF-8");
@@ -60,6 +60,7 @@ public class I18nUtil {
      * @return
      */
     public static String getMultString(String... keys) {
+
         Map<String, String> map = new HashMap<String, String>();
 
         Properties prop = loadI18nProp();
@@ -74,6 +75,7 @@ public class I18nUtil {
         }
 
         String json = JacksonUtil.writeValueAsString(map);
+//        logger.info(json);
         return json;
     }
 

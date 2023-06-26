@@ -42,3 +42,7 @@ export function delDemo(id) {
     method: 'delete'
   })
 }
+export function qwe() {
+  console.error("asdqwe")
+  return null;
+}

@@ -77,6 +77,13 @@
             </properties>
         </profile>
     </profiles>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
@@ -139,7 +146,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
+<!--```````````````````````````````````````````````````````-->
             <!-- velocity代码生成使用模板 -->
             <dependency>
                 <groupId>org.apache.velocity</groupId>
@@ -165,7 +172,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
+<!--```````````````````````````````````````````````````````-->
             <!-- dynamic-datasource 多数据源-->
             <dependency>
                 <groupId>com.baomidou</groupId>

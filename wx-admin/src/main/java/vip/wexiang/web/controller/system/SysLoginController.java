@@ -1,6 +1,9 @@
 package vip.wexiang.web.controller.system;
 
+import cn.dev33.satoken.annotation.SaCheckBasic;
 import cn.dev33.satoken.annotation.SaIgnore;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import vip.wexiang.common.constant.Constants;
 import vip.wexiang.common.core.domain.R;
 import vip.wexiang.common.core.domain.entity.SysMenu;
@@ -28,6 +31,7 @@ import java.util.Map;
 @Validated
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class SysLoginController {
 
     private final SysLoginService loginService;
@@ -43,9 +47,11 @@ public class SysLoginController {
     @PostMapping("/login")
     public R<Map<String, Object>> login(@Validated @RequestBody LoginBody loginBody) {
         Map<String, Object> ajax = new HashMap<>();
+        log.error(loginBody.getPassword());
         // 生成令牌
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
             loginBody.getUuid());
+        log.error(token);
         ajax.put(Constants.TOKEN, token);
         return R.ok(ajax);
     }
@@ -53,13 +59,17 @@ public class SysLoginController {
     /**
      * 退出登录
      */
+    //    @SaCheckBasic(account = "sa:123456")
     @SaIgnore
     @PostMapping("/logout")
     public R<Void> logout() {
+        log.error(name);
+        log.error(" @SaCheckBasic(account = \"sa:123456\")");
         loginService.logout();
         return R.ok("退出成功");
     }
-
+    @Value("${system.version}")
+    public String name;
     /**
      * 获取用户信息
      *

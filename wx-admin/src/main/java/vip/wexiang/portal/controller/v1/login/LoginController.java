@@ -3,7 +3,9 @@ package vip.wexiang.portal.controller.v1.login;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vip.wexiang.common.constant.CacheConstants;
@@ -102,12 +104,14 @@ public class LoginController extends BaseController {
         return R.ok(ajax);
     }
 
+
     /**
      * 退出登录
      */
     @SaIgnore
     @PostMapping("/logout")
     public R<Void> logout() {
+
         loginService.logout();
         return R.ok("退出成功");
     }

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
@@ -62,6 +62,7 @@ export default {
       'avatar',
       'device'
     ]),
+
     setting: {
       get() {
         return this.$store.state.settings.showSettings

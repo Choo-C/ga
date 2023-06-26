@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
+import lombok.extern.slf4j.Slf4j;
 import vip.wexiang.common.annotation.Log;
 import vip.wexiang.common.constant.CacheConstants;
 import vip.wexiang.common.core.controller.BaseController;
@@ -27,6 +28,7 @@ import java.util.List;
  *
  * @author Lion Li
  */
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/monitor/online")
@@ -82,6 +84,7 @@ public class SysUserOnlineController extends BaseController {
     @DeleteMapping("/{tokenId}")
     public R<Void> forceLogout(@PathVariable String tokenId) {
         try {
+            log.error(tokenId);
             StpUtil.kickoutByTokenValue(tokenId);
         } catch (NotLoginException ignored) {
         }

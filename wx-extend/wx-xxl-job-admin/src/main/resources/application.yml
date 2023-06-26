@@ -46,12 +46,13 @@ management:
       external-file: ./logs/wx-xxl-job-admin.log
 
 --- # xxljob系统配置
+
 xxl:
   job:
     # 鉴权token
     accessToken: xxl-job
     # 国际化
-    i18n: zh_CN
+    i18n: zh_TC
     # 日志清理
     logretentiondays: 30
     triggerpool:

@@ -6,6 +6,7 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
+import lombok.extern.slf4j.Slf4j;
 import vip.wexiang.common.constant.UserConstants;
 import vip.wexiang.common.core.domain.model.LoginUser;
 import vip.wexiang.common.enums.DeviceType;
@@ -25,6 +26,7 @@ import lombok.NoArgsConstructor;
  *
  * @author Lion Li
  */
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginHelper {
 
@@ -54,6 +56,7 @@ public class LoginHelper {
         if (ObjectUtil.isNotNull(deviceType)) {
             model.setDevice(deviceType.getDevice());
         }
+        log.error(loginUser.getLoginId()+"+12300000000000000000000000000000000---loginByDevice");
         StpUtil.login(loginUser.getLoginId(), model.setExtra(USER_KEY, loginUser.getUserId()));
         StpUtil.getTokenSession().set(LOGIN_USER_KEY, loginUser);
     }

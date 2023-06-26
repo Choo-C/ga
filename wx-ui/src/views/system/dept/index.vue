@@ -328,7 +328,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$modal.confirm('是否确认删除名称为"' + row.deptName + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除名称为1235611"' + row.deptName + '"的数据项？').then(function() {
         return delDept(row.deptId);
       }).then(() => {
         this.getList();
