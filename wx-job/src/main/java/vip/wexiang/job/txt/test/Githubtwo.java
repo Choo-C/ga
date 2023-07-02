@@ -6,5 +6,9 @@ public class Githubtwo {
         System.out.println("two");
         System.out.println("three");
         System.out.println("four");
+        System.out.println("five");
+        for (int i = 0; i < 5; i++) {
+            System.out.println(i);
+        }
     }
 }
