@@ -8,6 +8,7 @@ public class XxlJobDemoApplication {
     public static void main(String[] args) {
 //
 //        DASDQWE
+//        asdqweqweqweqwe
         SpringApplication.run(XxlJobDemoApplication.class, args);
     }
 }
