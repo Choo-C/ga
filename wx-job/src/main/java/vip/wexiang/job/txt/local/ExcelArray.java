@@ -95,7 +95,6 @@ public class ExcelArray {
             }
         }
     }
-
     public static void main(String[] args) throws Exception {
 //        ,vi,ms,pl,ar,it,ar,ta,sv,fi,id,th
 //,ko,hi,fr,de,vi,ms,pl,ar,it,ar,ta,sv,fi,id,th
@@ -168,32 +167,27 @@ public class ExcelArray {
         if (src.toString().length() > 0) {
             srcs.add(src);
         }
-        System.out.println(srcs);
-
-
 //        Map<String, List<String>> results = new HashMap<>();
         //        每次翻译只翻译一种语言。如果有多余api或者是线程，剩余的线程不会执行。
         //线程数量依据youdaoid有多少而决定的
         List<Youdao> youdao = getYoudao();
-        //
-        checkyoudaoAll(youdao);
-
-
 //        清空无效原文 null or ”“ or "   "
-
         //        原文 翻译语言 youdaoid 都不能为0，否则解决翻译。
         if (importExcel.size() <= 0 && languages.size() <= 0 && youdao.size() <= 0) {
             System.out.println("");
             return;
         }
-        //剔除不能用的有道api
-        checkyoudaoAll(youdao);
         //        每次翻译只翻译一种语言。如果有多余api或者是线程，剩余的线程不会执行。
         if (languages.size() < youdao.size()) {
             youdao = ListUtil.sub(youdao, 0, languages.size());
         }
-
-
+        //剔除不能用的有道api
+        checkyoudaoAll(youdao);
+//        //        检查有道api是否有效，无效则剔除。有概率会全部清除所以得再确认。
+        if (youdao.size() <= 0){
+            System.out.println("");
+            return;
+        }
         //执行了多线程得到了，多个List<String> 三个语言 10句话翻译
         //        --------------------------------多线程组装
 //        需要 src、lang、youdao key
@@ -201,7 +195,6 @@ public class ExcelArray {
         // 创建一个线程池
         ExecutorService executor = Executors.newFixedThreadPool(youdao.size());
         for (Youdao y : youdao) {
-
             //Map<String,List<String>>  String 线程处理的语言,List<String>
             // 线程需要处理1-n个语言，处理数量不确定，但是最少是一种。
             CompletableFuture<Map<String, List<String>>> future = CompletableFuture.supplyAsync(() -> {
@@ -209,8 +202,7 @@ public class ExcelArray {
 //                处理过的语言
                 Map<String, List<String>> results = new HashMap<>();
                 try {
-
-//                    处理语言，处理语言可能是多次的
+//                    处理语言，处理语言可能是多次的，多种的
                     while (!queue.isEmpty()) {
                         //此时来到任务线程
 //                        目标语言
@@ -220,6 +212,15 @@ public class ExcelArray {
                         for (StringBuilder sb : srcs) {
 //                          处理一个拼接的原文
                             String translated = translateTool.translate(sb.toString(), "zh-CHS", lan);
+//                            String translated = "<youdao>401</youdao>";test 如果有道欠费会停止止翻英文
+                            if ("<youdao>401</youdao>".equals(translated)) {
+                                //如果出现错误，则跳过该语言
+                                log.append("<youdao>401</youdao>");
+                                log.append("这个有道欠费了，请充值，再使用！");
+                                log.append(y.toString());
+                                log.append("<~~>");
+                                break;
+                            }
                             String[] split = translated.split("\n");
                             List<String> someList = Arrays.asList(split);
                             translatedList.addAll(someList);
@@ -255,10 +256,7 @@ public class ExcelArray {
                 x++;
             }
         }
-
         int i = 0;
-
-
         //        --------------------------------多线程的翻译结果进行组装
         for (int x = 0; x < concordance.size(); x++) {
             List<String> targets = concordance.get(x);
@@ -272,6 +270,13 @@ public class ExcelArray {
         Map<Integer, String> endLog = new HashMap<>();
         if (log.toString().equals("")) {
             endLog.put(0, "翻译成功，无任何问题");
+        }else if(log.toString().contains("<youdao>401</youdao>")){
+            List<String> list = Arrays.asList(log.toString().split("<~~>"));
+            //下标的遍历
+            for (int i1 = 0; i1 < list.size(); i1++) {
+                String line = list.get(i1);
+                endLog.put(i1, "error: " + line);
+            }
         } else {
             endLog.put(0, "error:      出错的位置可能对不上，如果是某一行没数据可能会影响到错处的坐标位置    仅供参考：" + log.toString());
         }
@@ -281,146 +286,6 @@ public class ExcelArray {
         String target = directory + salt + fileName;
         FileOutputStream outputStream = new FileOutputStream(new File(target));
         EasyExcelFactory.write(outputStream).sheet("xxxxxx").doWrite(rows);
-        //线程数量依据youdaoid有多少而决定的
-//        List<Youdao> youdao = getYoudao();
-//
-
-        //清空无效原文 null or ”“ or "   "
-
-//        //        原文 翻译语言 youdaoid 都不能为0，否则解决翻译。
-//        if (importExcel.size() <= 0 && languages.size() <=0 && youdao.size() <= 0){
-//            System.out.println("");
-//            return;
-//        }
-////        输出到Excel的数据，List里每个Map元素代表了一行，Map的key代表了列，value代表了数据
-//        List<Map<Integer,String>> rows = new ArrayList<>();
-//        //每列的语言是什么。
-//        Map<Integer, String> head = new HashMap<>();
-//        //第一列为原文
-//        head.put(0,"src");
-//        for (int x = 0;x<languages.size();x++){
-//            //跳过第一列，第一列已经被原文占领了。
-//            head.put(x+1,languages.get(x));
-//        }
-//        //每列的语言是什么，以代号形式显示
-//        rows.add(head);
-////        写好rows的第一列原文
-//        for (int x = 0;x<importExcel.size();x++){
-//            TranExcel excel = importExcel.get(x);
-//            Map<Integer, String> map = new HashMap<>();
-//            map.put(0,excel.getSrc());
-//            rows.add(map);
-//        }
-////        每次翻译只翻译一种语言。如果有多余api或者是线程，剩余的线程不会执行。
-//        if (languages.size()<youdao.size()){
-//            youdao = ListUtil.sub(youdao,0,languages.size());
-//        }
-//
-//        //执行了多线程得到了，多个List<String> 三个语言 10句话翻译
-//        //        --------------------------------多线程组装
-////        需要 src、lang、youdao key
-//        List<CompletableFuture> futures = new ArrayList<>();
-//        // 创建一个线程池
-//        ExecutorService executor = Executors.newFixedThreadPool(youdao.size());
-//        for (Youdao y:youdao){
-////            CallableMap callableMap = new CallableMap(queue, y, importExcel);
-//            //Map<String,List<String>>  String 线程处理的语言,List<String>
-//            // 线程需要处理1-n个语言，处理数量不确定，但是最少是一种。
-//            CompletableFuture<Map<String,List<String>>> future = CompletableFuture.supplyAsync(() -> {
-//                TextTranslate translateTool = new TextTranslate(y);
-//                Map<String,List<String>> results = new HashMap<>();
-//                try {
-////                    {lang:value},{tran: List<String>}
-////                    处理语言，处理语言可能是多次的
-//                    while (!queue.isEmpty()){
-//                        //此时来到任务线程
-////                        目标语言
-//                        String lan = queue.poll();
-//                        System.out.println(lan);
-//                        List<String> translateds = new ArrayList<>();
-//                        for (TranExcel q:importExcel){
-//                            String translated = translateTool.translate(q.getSrc(), "zh-CHS", lan);
-//                            translateds.add(translated+" ");
-//                        }
-//                        results.put(lan,translateds);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return results;
-//            });
-//            futures.add(future);
-//        }
-//        CompletableFuture[] array = futures.stream().toArray(CompletableFuture[]::new);
-//        CompletableFuture<Void> waitResult = CompletableFuture.allOf(array);
-//        System.out.println("start wait");
-//        // 阻塞当前线程，直到所有的future完成
-//        waitResult.join();
-//        Map<Integer,List<String>> concordance = new HashMap<>();
-//        for (CompletableFuture cf : array){
-//
-//            Map<String, List<String>> map = (Map<String, List<String>>) cf.get();
-//            int x = 0;
-//            for (String lan:languages){
-//                List<String> data = map.get(lan);
-//                if (!ObjectUtil.isNull(data)){
-//                    concordance.put(new Integer(x),data);
-//                }
-//                x++;
-//            }
-//        }
-////        --------------------------------多线程的翻译结果进行组装
-//        for (int x= 0; x<concordance.size();x++){
-//            List<String> targets = concordance.get(x);
-//
-//            for (int y = 0;y<targets.size();y++){
-//                String target = targets.get(y);
-//                Map<Integer, String> r = rows.get(y+1);
-//                r.put(x+1,target);
-//            }
-//        }
-//        Map<Integer, String> endLog = new HashMap<>();
-//        if (log.toString().equals("")){
-//            endLog.put(0,"翻译成功，无任何问题");
-//        }else {
-//            endLog.put(0,"error:      出错的位置可能对不上，如果是某一行没数据可能会影响到错处的坐标位置    仅供参考："+log.toString());
-//        }
-//        rows.add(endLog);
-//        //此刻翻译完所有原文，输出结果
-//        String salt = RandomUtil.randomString(5);
-//        String target = directory+salt+fileName;
-//        FileOutputStream outputStream = new FileOutputStream(new File(target));
-//        EasyExcelFactory.write(outputStream).sheet("xxxxxx").doWrite(rows);
-
     }
-
 }
-//class CallableMap implements Callable<List<String>>{
-//    private ConcurrentLinkedQueue<String> queueLanguages;
-//    private Youdao youdao;
-//    private List<TranExcel> src;
-//
-//    public CallableMap(
-//        ConcurrentLinkedQueue<String> queueLanguages,
-//        Youdao youdao,
-//        List<TranExcel> src) {
-//        this.queueLanguages = queueLanguages;
-//        this.youdao = youdao;
-//        this.src =src;
-//    }
-//    @Override
-//    public List<String> call() throws Exception {
-//        //假设每次从队列集合获取到对象，如果有则继续翻译，要是没有就不
-//        try {
-//            while (!queueLanguages.isEmpty()){
-//                String language = queueLanguages.poll();
-//
-//
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//}
-//class Excel
+

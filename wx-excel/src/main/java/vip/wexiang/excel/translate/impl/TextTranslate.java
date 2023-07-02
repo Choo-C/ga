@@ -1,4 +1,4 @@
-package vip.wexiang.job.translate.impl;
+package vip.wexiang.excel.translate.impl;
 
 
 import cn.hutool.core.util.ObjectUtil;
@@ -16,8 +16,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import vip.wexiang.job.translate.TranslateFile;
-import vip.wexiang.job.txt.domain.Youdao;
+import vip.wexiang.excel.domain.Youdao;
+import vip.wexiang.excel.translate.TranslateFile;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,64 +52,12 @@ public class TextTranslate implements TranslateFile<String> {
     }
 
     @Override
-    public  boolean checkYoudao() throws IOException {
-        Map<String,String> params = setMap("hi","zh-CHS","en");
-        String returnTranslation = null;
-        /** 创建HttpClient */
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        /** httpPost */
-        HttpPost httpPost = new HttpPost(YOUDAO_URL);
-        List<NameValuePair> paramsList = new ArrayList<NameValuePair>();
-        Iterator<Map.Entry<String,String>> it = params.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry<String,String> en = it.next();
-            String key = en.getKey();
-            String value = en.getValue();
-            paramsList.add(new BasicNameValuePair(key,value));
-        }
-        httpPost.setEntity(new UrlEncodedFormEntity(paramsList,"UTF-8"));
-        int i = 0;
-        while (true){
-            try {
-                Thread.sleep(400);
-            }catch (    Exception e){
-                e.printStackTrace();
-            }
-
-            CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            String json = EntityUtils.toString(httpEntity,"UTF-8");
-            EntityUtils.consume(httpEntity);
-            log.info(json);
-            JSONObject object = new JSONObject(json);
-            if ("0".equals(object.getString("errorCode"))) {
-                return true;
-            }
-            if (Arrays.asList("101","105","108","111","206", "401", "310","202").contains(object.getString("errorCode"))) {
-                return false;
-            }
-            if(i++ > 10){
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public String translate(String q,String fromLanguage,String toLanguage) throws IOException{
-
+        //拼装youdao api需要的字段
+        Map<String,String> params = new HashMap<String,String>();
         if (ObjectUtil.isNull(q)||ObjectUtil.isEmpty(q)){
             return "请保证左侧原文不能为空，否则无法翻译，同时保证原文字段的右测的字段无任何字符。";
         }
-        Map<String,String> params = setMap(q,fromLanguage,toLanguage);
-
-        /** 处理结果 */
-        String tra = requestForHttp(YOUDAO_URL, params);
-        return tra;
-    }
-    private Map<String,String>  setMap(String q,String fromLanguage,String toLanguage){
-        Map<String,String> params = new HashMap<String,String>();
         log.info(toLanguage);
         String salt = String.valueOf(System.currentTimeMillis());
         params.put("from", "zh-CHS");
@@ -123,8 +72,9 @@ public class TextTranslate implements TranslateFile<String> {
         params.put("salt", salt);
         params.put("sign", sign);
 //        params.put("vocabId","您的用户词表ID");
-
-        return params;
+        /** 处理结果 */
+        String tra = requestForHttp(YOUDAO_URL, params);
+        return tra;
     }
     public static String requestForHttp(String url, Map<String,String> params) throws IOException {
 
@@ -142,13 +92,85 @@ public class TextTranslate implements TranslateFile<String> {
             paramsList.add(new BasicNameValuePair(key,value));
         }
         httpPost.setEntity(new UrlEncodedFormEntity(paramsList,"UTF-8"));
-//        int qwe = 0;
+
+//        字段名	        类型	        含义	            备注
+//        errorCode	    text	错误返回码	    一定存在
+//        query	        text	源语言	        查询正确时，一定存在
+//        translation	Array	翻译结果	        查询正确时，一定存在
+//        basic	        text	词义	            基本词典，查词时才有
+//        web	        Array	词义	            网络释义，该结果不一定存在
+//        l	            text	源语言和目标语言	一定存在
+//        dict	        text	词典deeplink	    查询语种为支持语言时，存在
+//        webdict	    text	webdeeplink	    查询语种为支持语言时，存在
+//        tSpeakUrl	    text	翻译结果发音地址	翻译成功一定存在，需要应用绑定语音合成服务才能正常播放,否则返回110错误码
+//        speakUrl	    text	源语言发音地址	    翻译成功一定存在，需要应用绑定语音合成服务才能正常播放,否则返回110错误码
+//        returnPhrase	Array	单词校验后的结果	主要校验字母大小写、单词前含符号、中文简繁体
+
+//        错误码	含义
+//        0	    正常回复翻译内容
+//        411	访问频率受限,请稍后访问
+//        206	因为时间戳无效导致签名校验失败
+//        错误码很多，具体看文档
+//                https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html
+//        正常回复的json字符
+//        {
+//            "errorCode":"0",
+//            "query":"good", //查询正确时，一定存在
+//            "isDomainSupport":"true", //翻译结果是否为领域翻译(仅开通领域翻译时存在)
+//            "translation": [ //查询正确时一定存在
+//            "好"
+//  ],
+//            "basic":{ // 有道词典-基本词典,查词时才有
+//            "phonetic":"gʊd",
+//                "uk-phonetic":"gʊd", //英式音标
+//                "us-phonetic":"ɡʊd", //美式音标
+//                "uk-speech": "XXXX",//英式发音
+//                "us-speech": "XXXX",//美式发音
+//                "explains":[
+//            "好处",
+//                "好的",
+//                "好",
+//      ]
+//        },
+//            "web":[ // 有道词典-网络释义，该结果不一定存在
+//            {
+//                "key":"good",
+//                "value":["良好","善","美好"]
+//            },
+//            {...}
+//  ],
+//            "dict":{
+//            "url":"yddict://m.youdao.com/dict?le=eng&q=good"
+//        },
+//            "webdict":{
+//            "url":"http://m.youdao.com/dict?le=eng&q=good"
+//        },
+//            "l":"EN2zh-CHS",
+//            "tSpeakUrl":"XXX",//翻译后的发音地址
+//            "speakUrl": "XXX" //查询文本的发音地址
+//        }
+//        并非每次请求都能正常回复，大多数情况都是411，所以需要反复请求，正常第一次请求都可以执行成功，但是反复请求
         while(true){
             log.error("-------");
             CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
             try{
+                Header[] contentType = httpResponse.getHeaders("Content-Type");
+                log.info("Content-Type:" + contentType[0].getValue());
+                if("audio/mp3".equals(contentType[0].getValue())){
+                    //如果响应是wav
+                    HttpEntity httpEntity = httpResponse.getEntity();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    httpResponse.getEntity().writeTo(baos);
+                    byte[] result = baos.toByteArray();
+                    EntityUtils.consume(httpEntity);
+                    if(result != null){//合成成功
+                        String file = "合成的音频存储路径"+System.currentTimeMillis() + ".mp3";
+                        byte2File(result,file);
+                    }
+                }else{
+                    /** 响应不是音频流，直接显示结果 */
                     try{
-                        Thread.sleep(400);
+                        Thread.sleep(350);
                     }catch (Exception e){
 
                     }
@@ -160,24 +182,17 @@ public class TextTranslate implements TranslateFile<String> {
                     JSONObject object = new JSONObject(json);
 
                     if (!"0".equals(object.getString("errorCode"))) {
-                        if ("401".equals(object.getString("errorCode"))) {
-                            return "<youdao>401</youdao>";
-                        }
                         try{
                             Thread.sleep(1500);
                             log.error("超时了");
                         }catch (Exception e){
                         }
-//                        if (qwe>15){
-//                            return "--------------------------翻译失败";
-//                        }
-//                        qwe++;
                         continue;
                     }
                     JSONArray translation = object.getJSONArray("translation");
                     returnTranslation = translation.getString(0);
                     log.error(returnTranslation);
-
+                }
             }finally {
                 try{
                     if(httpResponse!=null){

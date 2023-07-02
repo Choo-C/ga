@@ -353,6 +353,7 @@
         <module>wx-generator</module>
         <module>wx-common</module>
         <module>wx-extend</module>
+        <module>wx-excel</module>
         <module>wx-oss</module>
         <module>wx-sms</module>
         <module>wx-business</module>
