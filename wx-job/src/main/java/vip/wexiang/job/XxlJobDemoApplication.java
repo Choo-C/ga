@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class XxlJobDemoApplication {
     public static void main(String[] args) {
-
+//
+//        DASDQWE
         SpringApplication.run(XxlJobDemoApplication.class, args);
     }
 }
