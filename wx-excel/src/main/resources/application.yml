@@ -2,31 +2,52 @@ server:
   port: 8071
 
 
---- # xxl-job ??
+--- # xxl-job 配置
 xxl.job:
-  # ?????
+  # 执行器开关
   enabled: true
-  # ?????????????????????????????
+  # 调度中心地址：如调度中心集群部署存在多个地址则用逗号分隔。
   admin-addresses: http://localhost:8090/xxl-job-admin
-  # ?????TOKEN??????
+  # 执行器通讯TOKEN：非空时启用
   access-token: xxl-job
   executor:
-    # ???AppName??????????????????????
+    # 执行器AppName：执行器心跳注册分组依据；为空则关闭自动注册
     appname: xxl-job-executor-sample
-    # ?????? ????9101?????
+    # 执行器端口号 执行器从9101开始往后写
     port: 9106
-    # ????????IP:PORT
+    # 执行器注册：默认IP:PORT
     #    address: 127.0.0.1:9101
-    # ???IP???????IP
+    # 执行器IP：默认自动获取IP
     #    ip: 127.0.0.1
-    # ???????????????
+    # 执行器运行日志文件存储磁盘路径
     logpath: ./logs/xxl-job
-    # ??????????????3??
+    # 执行器日志文件保存天数：大于3生效
     logretentiondays: 30
 
 
+--- # 数据库配置
+spring:
+  datasource:
+    dynamic:
+      primary: primary # 设置主数据源
+      datasource:
+        primary: # 主数据源的配置
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/Choo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+          username: root
+          password: etoak
 
-
+      hikari:
+        auto-commit: true
+        connection-test-query: SELECT 1
+        connection-timeout: 10000
+        idle-timeout: 30000
+        max-lifetime: 900000
+        maximum-pool-size: 30
+        minimum-idle: 10
+        pool-name: HikariCP
+        validation-timeout: 1000
 
 
 
