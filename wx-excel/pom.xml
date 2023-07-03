@@ -8,7 +8,7 @@
         <version>1.0.0</version>
     </parent>
     <groupId>vip.wexiang</groupId>
-    <artifactId>excel</artifactId>
+    <artifactId>wx-excel</artifactId>
 
     <dependencies>
         <!-- 通用工具-->
@@ -25,6 +25,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
