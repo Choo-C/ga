@@ -2,10 +2,7 @@ package vip.wexiang.excel.service.impl;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
-import com.alibaba.excel.EasyExcelFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vip.wexiang.common.utils.StringUtils;
@@ -14,14 +11,14 @@ import vip.wexiang.excel.domain.TranExcel;
 import vip.wexiang.excel.domain.Youdao;
 import vip.wexiang.excel.service.TranslateService;
 
+
 import vip.wexiang.excel.service.YoudaoService;
 import vip.wexiang.excel.translate.impl.TextTranslate;
 
 
-
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -31,8 +28,9 @@ import java.util.concurrent.Executors;
 @Service
 @Slf4j
 public class TranslateServiceImpl implements TranslateService {
-    @Autowired
-    private YoudaoService youdaoService;
+
+    @Resource
+    private YoudaoService youdaoServiceImpl;
     @Override
     public List<Map<Integer, String>> translateByMF(MultipartFile file, String lang) throws Exception{
 //        String lang = "zh-CHT,en,ja";
@@ -107,7 +105,8 @@ public class TranslateServiceImpl implements TranslateService {
         }
 
 //        获得所有youdao的api
-        List<Youdao> youdao = youdaoService.getAllYoudao();
+        List<Youdao> youdao = youdaoServiceImpl.getAllYoudao();
+//        List<Youdao> youdao = null;
 //        清空无效原文 null or ”“ or "   "
         //        原文 翻译语言 youdaoid 都不能为0，否则解决翻译。
         if (importExcel.size() <= 0 && languages.size() <= 0 && youdao.size() <= 0) {
@@ -241,11 +240,9 @@ public class TranslateServiceImpl implements TranslateService {
 
         }
         rows.add(endLog);
-        //此刻翻译完所有原文，输出结果
-        String salt = RandomUtil.randomString(5);
-        String target = directory + salt + fileName;
-        FileOutputStream outputStream = new FileOutputStream(new File(target));
-        EasyExcelFactory.write(outputStream).sheet("翻译表").doWrite(rows);
-        return null;
+
+
+
+        return rows;
     }
 }

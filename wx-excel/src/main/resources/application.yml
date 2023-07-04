@@ -4,7 +4,8 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
-
+resource:
+  youdao: youdaoServiceTwoImpl
 
 --- # xxl-job 配置
 xxl.job:

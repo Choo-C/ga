@@ -37,9 +37,18 @@ create table t_instruct_set
 drop table if exists t_manage;
 create table t_manage
 (
-    id           varchar(32) primary key comment '指令id',
-    username     varchar(100) comment '指令',
-    password     varchar(200) comment '预取的结果',
-    status varchar(2) comment 'xxx',
-    lead varchar(32) comment 'xxxx'
+    id       varchar(32) primary key comment '指令id',
+    username varchar(100) comment '指令',
+    password varchar(200) comment '预取的结果',
+    status   varchar(2) comment 'xxx',
+    lead     varchar(32) comment 'xxxx'
 ) engine = innodb comment = '管理者';
+drop table if exists youdaoapi;
+create table youdaoapi
+(
+    youdao_key   varchar(50)  not null comment 'key',
+    youdao_secret varchar(50)   not null comment '密钥',
+    url varchar(100)    not null  default 'https://openapi.youdao.com/api'    comment  '链接的api接口',
+    primary key (youdao_key)
+)engine = innodb comment = '有道翻译表'
+

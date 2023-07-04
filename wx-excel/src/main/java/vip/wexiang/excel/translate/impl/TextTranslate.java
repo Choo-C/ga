@@ -3,7 +3,6 @@ package vip.wexiang.excel.translate.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -20,7 +19,6 @@ import vip.wexiang.excel.domain.Youdao;
 import vip.wexiang.excel.translate.TranslateFile;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,6 +52,46 @@ public class TextTranslate implements TranslateFile<String> {
 
     @Override
     public boolean checkYoudao() throws IOException {
+        Map<String,String> params = setMap("hi","zh-CHS","en");
+        String returnTranslation = null;
+        /** 创建HttpClient */
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        /** httpPost */
+        HttpPost httpPost = new HttpPost(YOUDAO_URL);
+        List<NameValuePair> paramsList = new ArrayList<NameValuePair>();
+        Iterator<Map.Entry<String,String>> it = params.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String,String> en = it.next();
+            String key = en.getKey();
+            String value = en.getValue();
+            paramsList.add(new BasicNameValuePair(key,value));
+        }
+        httpPost.setEntity(new UrlEncodedFormEntity(paramsList,"UTF-8"));
+        int i = 0;
+        while (true){
+            try {
+                Thread.sleep(400);
+            }catch (    Exception e){
+                e.printStackTrace();
+            }
+
+            CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            String json = EntityUtils.toString(httpEntity,"UTF-8");
+            EntityUtils.consume(httpEntity);
+            log.info(json);
+            JSONObject object = new JSONObject(json);
+            if ("0".equals(object.getString("errorCode"))) {
+                return true;
+            }
+            if (Arrays.asList("101","105","108","111","206", "401", "310","202").contains(object.getString("errorCode"))) {
+                return false;
+            }
+            if(i++ > 10){
+                break;
+            }
+        }
+
         return false;
     }
 
@@ -148,6 +186,25 @@ public class TextTranslate implements TranslateFile<String> {
         //            20
         list.add(Youdao.builder().url("https://openapi.youdao.com/api").appkey("62ccf56900e678c4").appsecret("hPG9hMbPow5c8fTMFaO7CAM32YUZdl0H").build());
         return list;
+    }
+    private Map<String,String>  setMap(String q,String fromLanguage,String toLanguage){
+        Map<String,String> params = new HashMap<String,String>();
+        log.info(toLanguage);
+        String salt = String.valueOf(System.currentTimeMillis());
+        params.put("from", "zh-CHS");
+        params.put("to", toLanguage);
+        params.put("signType", "v3");
+        String curtime = String.valueOf(System.currentTimeMillis() / 1000);
+        params.put("curtime", curtime);
+        String signStr = APP_KEY + truncate(q) + salt + curtime + APP_SECRET;
+        String sign = getDigest(signStr);
+        params.put("appKey", APP_KEY);
+        params.put("q", q);
+        params.put("salt", salt);
+        params.put("sign", sign);
+//        params.put("vocabId","您的用户词表ID");
+
+        return params;
     }
     public static String requestForHttp(String url, Map<String,String> params) throws IOException {
 

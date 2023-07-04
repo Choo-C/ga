@@ -16,6 +16,11 @@
             <groupId>vip.wexiang</groupId>
             <artifactId>wx-common</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>vip.wexiang</groupId>-->
+<!--            <artifactId>wx-business</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
