@@ -20,11 +20,12 @@ target/
 .springBeans
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
-
+# Ignore Maven home directory
+maven/
 ### JRebel ###
 rebel.xml
 
