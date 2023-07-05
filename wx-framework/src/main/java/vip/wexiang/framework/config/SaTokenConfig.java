@@ -39,7 +39,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
         // 注册路由拦截器，自定义验证规则
         registry.addInterceptor(new SaInterceptor(handler -> {
             AllUrlHandler allUrlHandler = SpringUtils.getBean(AllUrlHandler.class);
-            log.error(allUrlHandler.getUrls().toString());
+//            log.error(allUrlHandler.getUrls().toString());
             // 登录验证 -- 排除多个路径
             SaRouter
                 // 获取所有的

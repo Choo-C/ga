@@ -3,7 +3,6 @@ package vip.wexiang.job.translate.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -16,10 +15,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import vip.wexiang.job.translate.TranslateFile;
+import vip.wexiang.job.translate.TranslateTwoFile;
 import vip.wexiang.job.txt.domain.Youdao;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,7 +28,7 @@ import java.util.*;
 
 @Slf4j
 @Component
-public class TextTranslate implements TranslateFile<String> {
+public class TextTranslateTwo implements TranslateTwoFile<String> {
 
 //    private static final String YOUDAO_URL = "https://openapi.youdao.com/api";
     private  String YOUDAO_URL;
@@ -39,12 +37,12 @@ public class TextTranslate implements TranslateFile<String> {
 
 //    private static final String APP_SECRET = "sth7u8U3flx02og0dZtOJyc1sS2ctwRT";
     private  String APP_SECRET;
-    public TextTranslate(Youdao youdao){
+    public TextTranslateTwo(Youdao youdao){
         this.YOUDAO_URL = youdao.getUrl();
         this.APP_KEY = youdao.getAppkey();
         this.APP_SECRET = youdao.getAppsecret();
     }
-    public TextTranslate(){
+    public TextTranslateTwo(){
         YOUDAO_URL = "https://openapi.youdao.com/api";
         APP_KEY = "3a98d3b6fa96b508";
         APP_SECRET = "sth7u8U3flx02og0dZtOJyc1sS2ctwRT";

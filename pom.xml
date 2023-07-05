@@ -342,6 +342,13 @@
                 <version>${universal-system.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>vip.wexiang</groupId>
+                <artifactId>wx-maven</artifactId>
+                <version>${universal-system.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -357,6 +364,7 @@
         <module>wx-oss</module>
         <module>wx-sms</module>
         <module>wx-business</module>
+        <module>wx-maven</module>
     </modules>
     <packaging>pom</packaging>
 

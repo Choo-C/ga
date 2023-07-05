@@ -10,4 +10,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="url" column="url"/>
     </resultMap>
 
+    <sql id="Base_Column_List">
+        t.youdao_key,
+        t.youdao_secret,
+        t.url
+    </sql>
+    <sql id="table">youdaoapi</sql>
+    <select id="getAllYoudaoapi" resultMap="YoudaoapiResult">
+        select <include refid="Base_Column_List"/> from <include refid="table"/> t
+    </select>
+    <insert id="insertYoudao" parameterType="vip.wexiang.business.domain.Youdaoapi" >
+        insert into <include refid="table"/>
+            (
+                youdao_key,
+                youdao_secret,
+                url
+            ) values(
+                #{youdaoKey},
+                #{youdaoSecret},
+                #{url}
+            );
+    </insert>
+    <delete id="removeOne" parameterType="vip.wexiang.business.domain.Youdaoapi">
+        delete from <include refid="table"/> where youdao_key = #{youdaoKey} and youdao_secret =#{youdaoSecret}
+    </delete>
 </mapper>

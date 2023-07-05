@@ -1,11 +1,10 @@
 package vip.wexiang.job.txt.local;
 
 import cn.hutool.core.util.RandomUtil;
-import com.alibaba.excel.EasyExcel;
 import lombok.extern.slf4j.Slf4j;
 import vip.wexiang.common.utils.poi.ExcelUtil;
-import vip.wexiang.job.translate.impl.TextTranslate;
-import vip.wexiang.job.txt.domain.TranExcel;
+import vip.wexiang.job.translate.impl.TextTranslateTwo;
+import vip.wexiang.job.txt.domain.JobTranExcel;
 import vip.wexiang.job.txt.domain.Youdao;
 
 import java.io.File;
@@ -32,11 +31,11 @@ public class ExcelMultithreading {
         try{
             FileInputStream inputStream = new FileInputStream(new File(path));
 //        获取到了整个excel，但目前只是拿到了原文
-            List<TranExcel> rows = ExcelUtil.importExcel(inputStream,TranExcel.class);
+            List<JobTranExcel> rows = ExcelUtil.importExcel(inputStream, JobTranExcel.class);
             log.error(rows.size()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
             // 创建一个线程安全的队列
-            ConcurrentLinkedQueue<TranExcel> queue = new ConcurrentLinkedQueue<>();
+            ConcurrentLinkedQueue<JobTranExcel> queue = new ConcurrentLinkedQueue<>();
             queue.addAll(rows);
 
             //创建一个有道key集合
@@ -121,7 +120,7 @@ public class ExcelMultithreading {
             //此刻翻译完所有原文
             String salt = RandomUtil.randomString(5);
             FileOutputStream outputStream = new FileOutputStream(new File(directory+salt+fileName));
-            ExcelUtil.exportExcel(rows,"翻译表",TranExcel.class,outputStream);
+            ExcelUtil.exportExcel(rows,"翻译表", JobTranExcel.class,outputStream);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -134,10 +133,10 @@ public class ExcelMultithreading {
 
 @Slf4j
 class ElementProcessor extends Thread {
-    private ConcurrentLinkedQueue<TranExcel> queue;
+    private ConcurrentLinkedQueue<JobTranExcel> queue;
     private Youdao youdao;
 
-    public ElementProcessor(ConcurrentLinkedQueue<TranExcel> queue
+    public ElementProcessor(ConcurrentLinkedQueue<JobTranExcel> queue
         ,Youdao youdao) {
         this.queue = queue;
         this.youdao = youdao;
@@ -149,11 +148,11 @@ class ElementProcessor extends Thread {
         //    新增语言，请在后续自行添加。并且对应好属性
         String lang = "en,ja,de,pt,ko,hi,fr,vi,ms,pl,sv,ar,ta,it,fi,id,th";
         List<String> languages = Arrays.asList(lang.split(","));
-        TextTranslate translateTool = new TextTranslate(youdao);
+        TextTranslateTwo translateTool = new TextTranslateTwo(youdao);
         try{
             while (!queue.isEmpty()) {
 
-                TranExcel element = queue.poll();
+                JobTranExcel element = queue.poll();
                 log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+getName());
                 System.out.println(element.toString());
 //                一行原文
@@ -162,7 +161,7 @@ class ElementProcessor extends Thread {
                     String translation = translateTool.translate(src,"zh-CHS",language);
 //                    set语言
                     String setterName = "set" + language.substring(0, 1).toUpperCase() + language.substring(1);
-                    Method setterMethod = TranExcel.class.getMethod(setterName, String.class);
+                    Method setterMethod = JobTranExcel.class.getMethod(setterName, String.class);
 //                    set传入值
                     setterMethod.invoke(element,translation);
                 }

@@ -3,12 +3,14 @@ package vip.wexiang.business.controller;
 import java.util.List;
 import java.util.Arrays;
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
+import vip.wexiang.business.domain.Youdaoapi;
 import vip.wexiang.common.annotation.RepeatSubmit;
 import vip.wexiang.common.annotation.Log;
 import vip.wexiang.common.core.controller.BaseController;
@@ -92,14 +94,13 @@ public class YoudaoapiController extends BaseController {
     /**
      * 删除有道翻译
      *
-     * @param youdaoKeys 主键串
+     * @param  主键串
      */
     @SaCheckPermission("business:youdaoapi:remove")
     @Log(title = "有道翻译", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{youdaoKeys}")
-    public R<Void> remove(@NotEmpty(message = "主键不能为空")
-                          @PathVariable String[] youdaoKeys) {
-        return toAjax(iYoudaoapiService.deleteWithValidByIds(Arrays.asList(youdaoKeys), true));
+    @DeleteMapping()
+    public R<Void> remove(@RequestBody YoudaoapiBo bo) {
+        return toAjax(iYoudaoapiService.deleteByBo(bo));
     }
 
 }

@@ -54,6 +54,11 @@
             <artifactId>wx-framework</artifactId>
         </dependency>
 
+        <!-- maventest模块 -->
+        <dependency>
+            <groupId>vip.wexiang</groupId>
+            <artifactId>wx-maven</artifactId>
+        </dependency>
         <dependency>
             <groupId>vip.wexiang</groupId>
             <artifactId>wx-system</artifactId>
@@ -80,6 +85,8 @@
             <groupId>vip.wexiang</groupId>
             <artifactId>wx-business</artifactId>
         </dependency>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

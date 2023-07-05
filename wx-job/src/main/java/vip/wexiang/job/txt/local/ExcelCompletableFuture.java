@@ -5,8 +5,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.excel.EasyExcelFactory;
 import vip.wexiang.common.utils.poi.ExcelUtil;
-import vip.wexiang.job.translate.impl.TextTranslate;
-import vip.wexiang.job.txt.domain.TranExcel;
+import vip.wexiang.job.translate.impl.TextTranslateTwo;
+import vip.wexiang.job.txt.domain.JobTranExcel;
 import vip.wexiang.job.txt.domain.Youdao;
 
 import java.io.File;
@@ -97,7 +97,7 @@ public class ExcelCompletableFuture {
         System.out.println(languages);
         FileInputStream inputStream = new FileInputStream(new File(path));
 //        获取到了整个excel，但目前只是拿到了原文
-        List<TranExcel> importExcel = ExcelUtil.importExcel(inputStream,TranExcel.class);
+        List<JobTranExcel> importExcel = ExcelUtil.importExcel(inputStream, JobTranExcel.class);
         List<Map<Integer,String>> rows = new ArrayList<>();
         Map<Integer, String> head = new HashMap<>();
         head.put(0,"src");
@@ -106,7 +106,7 @@ public class ExcelCompletableFuture {
         }
         rows.add(head);
         for (int x = 0;x<importExcel.size();x++){
-            TranExcel excel = importExcel.get(x);
+            JobTranExcel excel = importExcel.get(x);
             Map<Integer, String> map = new HashMap<>();
             map.put(0,excel.getSrc());
             rows.add(map);
@@ -134,7 +134,7 @@ public class ExcelCompletableFuture {
             //Map<String,List<String>>  String 线程处理的语言,List<String>
             // 线程需要处理1-n个语言，处理数量不确定，但是最少是一种。
             CompletableFuture<Map<String,List<String>>> future = CompletableFuture.supplyAsync(() -> {
-                TextTranslate translateTool = new TextTranslate(y);
+                TextTranslateTwo translateTool = new TextTranslateTwo(y);
                 Map<String,List<String>> results = new HashMap<>();
                 try {
 //                    {lang:value},{tran: List<String>}
@@ -145,7 +145,7 @@ public class ExcelCompletableFuture {
                         String lan = queue.poll();
                         System.out.println(lan);
                         List<String> translateds = new ArrayList<>();
-                        for (TranExcel q:importExcel){
+                        for (JobTranExcel q:importExcel){
                             String translated = translateTool.translate(q.getSrc(), "zh-CHS", lan);
                             translateds.add(translated);
                         }
@@ -221,12 +221,12 @@ public class ExcelCompletableFuture {
 class CallableMap implements Callable<List<String>>{
     private ConcurrentLinkedQueue<String> queueLanguages;
     private Youdao youdao;
-    private List<TranExcel> src;
+    private List<JobTranExcel> src;
 
     public CallableMap(
         ConcurrentLinkedQueue<String> queueLanguages,
         Youdao youdao,
-        List<TranExcel> src) {
+        List<JobTranExcel> src) {
         this.queueLanguages = queueLanguages;
         this.youdao = youdao;
         this.src =src;

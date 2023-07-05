@@ -1,21 +1,15 @@
 package vip.wexiang.job.txt.local;
 
-import cn.hutool.core.util.RandomUtil;
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.read.listener.PageReadListener;
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import vip.wexiang.common.utils.poi.ExcelUtil;
-import vip.wexiang.job.translate.impl.TextTranslate;
-import vip.wexiang.job.txt.domain.TranExcel;
+import vip.wexiang.job.translate.impl.TextTranslateTwo;
+import vip.wexiang.job.txt.domain.JobTranExcel;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 @Slf4j
 public class ExcelMoreLanguage {
@@ -28,13 +22,13 @@ public class ExcelMoreLanguage {
         String lang = "en,ja,de,pt,ko,hi,fr,vi,ms,pl,sv,ar,ta,it,fi,id,th";
         List<String> languages = Arrays.asList(lang.split(","));
 //        固定的url和key miyao
-        TextTranslate translateTool = new TextTranslate();
+        TextTranslateTwo translateTool = new TextTranslateTwo();
         try{
             //获取到了Excel文件对象
             FileInputStream inputStream = new FileInputStream(new File(path));
 //        获取到了整个excel，但目前只是拿到了原文
-            List<TranExcel> rows = ExcelUtil.importExcel(inputStream,TranExcel.class);
-            for (TranExcel row : rows){
+            List<JobTranExcel> rows = ExcelUtil.importExcel(inputStream, JobTranExcel.class);
+            for (JobTranExcel row : rows){
                 //拿到了一行，根据原文，逐一翻译对应单词或者句子，将翻译结果set回对应语言。
                 log.info(row.toString());
 //                一行原文
@@ -42,7 +36,7 @@ public class ExcelMoreLanguage {
                 for (String language :languages){
                     String translation = translateTool.translate(src,"zh-CHS",language);
                     String setterName = "set" + language.substring(0, 1).toUpperCase() + language.substring(1);
-                    Method setterMethod = TranExcel.class.getMethod(setterName, String.class);
+                    Method setterMethod = JobTranExcel.class.getMethod(setterName, String.class);
                     setterMethod.invoke(row,translation);
                 }
                 //此刻翻译完一行，每种语言都翻译了
@@ -50,7 +44,7 @@ public class ExcelMoreLanguage {
             //此刻翻译完所有原文
 //            String salt = RandomUtil.randomString(5);
             FileOutputStream outputStream = new FileOutputStream(new File(directory+"301-600"+fileName));
-            ExcelUtil.exportExcel(rows,"翻译表",TranExcel.class,outputStream);
+            ExcelUtil.exportExcel(rows,"翻译表", JobTranExcel.class,outputStream);
         }catch (Exception e){
             e.printStackTrace();
         }

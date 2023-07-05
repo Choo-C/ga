@@ -8,7 +8,7 @@ import lombok.*;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranExcel {
+public class JobTranExcel {
     @ExcelProperty(index = 0)
     private String src;
     @ExcelProperty(index = 1)

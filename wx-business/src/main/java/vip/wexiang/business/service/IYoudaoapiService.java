@@ -15,7 +15,8 @@ import java.util.List;
  * Created by admin.
  */
 public interface IYoudaoapiService extends IService<Youdaoapi> {
-
+    List<Youdaoapi> getAllYoudao();
+    boolean detectionYoudaoapi(Youdaoapi youdaoapi);
     /**
      * 查询有道翻译
      */
@@ -46,4 +47,5 @@ public interface IYoudaoapiService extends IService<Youdaoapi> {
      */
     Boolean deleteWithValidByIds(Collection<String> ids, Boolean isValid);
 
+    Boolean deleteByBo(YoudaoapiBo bean);
 }
