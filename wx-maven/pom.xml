@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>universal-system</artifactId>
+        <groupId>vip.wexiang</groupId>
+        <version>1.0.0</version> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>vip.wexiang</groupId>
+    <artifactId>wx-maven</artifactId>
+    <name>wx-maven</name>
+    <description>wx-maven</description>
+
+    <dependencies>
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>vip.wexiang</groupId>
+            <artifactId>wx-common</artifactId>
+        </dependency>
+        <!-- 系统模块 -->
+        <dependency>
+            <groupId>vip.wexiang</groupId>
+            <artifactId>wx-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+
+</project>
